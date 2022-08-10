@@ -2,7 +2,6 @@ import time
 import csv
 from math import log
 from random import seed, uniform
-from statistics import mean, variance
 
 import numpy as np
 import matplotlib.pyplot as plt

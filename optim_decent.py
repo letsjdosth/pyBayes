@@ -1,6 +1,4 @@
 import numpy as np
-import scipy
-
 
 class DescentUnconstrained:
     def __init__(self, fn_objective, fn_objective_gradient, fn_objective_domain_indicator = None):
