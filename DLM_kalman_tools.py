@@ -5,7 +5,8 @@ from DLM_Core import DLM_D0_container, DLM_simulator, DLM_utility
 class Kalman_filter_smoother:
     def __init__(self, y_observation, D0: DLM_D0_container, initial_mu0_given_D0, initial_P0_given_D0):
         self.util_inst = DLM_utility()
-        
+
+        #input
         self.y_observation = self.util_inst.vectorize_seq(y_observation)
         self.D0 = D0
         self.mu0 = initial_mu0_given_D0
@@ -41,7 +42,7 @@ class Kalman_filter_smoother:
         At = self.D0.F_obs_eq_design[t-1]
         Rt = self.D0.V_obs_eq_covariance[t-1]
         ut_obs_coeff = self.D0.u_coeff_obs_eq_seq[t-1]
-        
+
         innovation_t = self.y_observation[t-1] - At @ theta_t_one_step_forecast - ut_obs_coeff @ ut
         innovation_t_cov = At @ Pt_one_step_forecast @ np.transpose(At) + Rt
         kalman_gain_t = Pt_one_step_forecast @ At @ np.linalg.inv(innovation_t_cov)
@@ -120,7 +121,7 @@ if __name__=="__main__":
         test1_D0.set_Ft_design_mat(test1_F)
         test1_D0.set_Gt_transition_mat(test1_G)
         test1_D0.set_Vt_obs_eq_covariance(test1_V)
-        test1_D0.set_Wt_state_error_cov(test1_V)
+        test1_D0.set_Wt_state_error_cov(test1_W)
         test1_D0.set_u_no_covariate()
 
         test1_sim_inst = DLM_simulator(test1_D0, 20220814)
@@ -142,7 +143,7 @@ if __name__=="__main__":
         plt.plot(range(100), test1_filtered_theta_on_time) #orange: posterior E(theta_t|D_t)
         plt.plot(range(100), test1_filtered_theta_one_step_forecast) #green: prior E(theta_t|D_{t-1})
         plt.scatter(range(100), test1_y_seq, s=10) #blue dot: obs
-        
+
         test1_filter_inst.run_smoother()
         test1_smoothed_theta,_ = test1_filter_inst.get_smoothed_theta_P()
         # print(test1_smoothed_theta)
@@ -184,7 +185,7 @@ if __name__=="__main__":
         plt.plot(range(100), [x[0] for x in test2_filtered_theta_on_time]) #orange: posterior E(theta_t|D_t)
         plt.plot(range(100), [x[0] for x in test2_filtered_theta_one_step_forecast]) #green: prior E(theta_t|D_{t-1})
         plt.scatter(range(100), [x[0] for x in test2_y_seq], s=10) #blue dot: obs
-        
+
         test2_filter_inst.run_smoother()
         test2_smoothed_theta, _ = test2_filter_inst.get_smoothed_theta_P()
         plt.plot(range(100), [x[0] for x in test2_smoothed_theta]) #red: smoothed theta
