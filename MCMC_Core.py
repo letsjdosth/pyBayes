@@ -57,7 +57,7 @@ class MCMC_Gibbs(MCMC_base):
 
     def sampler(self, **kwargs):
         last = self.MC_sample[-1]
-        new = [x for x in last] #[nu, theta]
+        new = self.deep_copier(last)
         #update new
         new = self.full_conditional_sampler(new)
 

@@ -633,9 +633,9 @@ class DLM_univariate_y_without_V_in_D0_with_reference_prior(DLM_univariate_y_wit
 if __name__=="__main__":
     import matplotlib.pyplot as plt
     test1 = True
-    test2 = True
-    test3 = True
-    test4 = True
+    test2 = False
+    test3 = False
+    test4 = False
     #caution: x axis starts 0 but it means t=1 (because python index starts at 0)
     #when implementing visualization function, adjust it! below should be
     #range(100) => range(1, 101)
@@ -665,17 +665,22 @@ if __name__=="__main__":
         # ========
         test1_DLM_inst = DLM_full_D0(test1_y_seq, test1_D0, np.array([0]), np.array([[1]]))
         test1_DLM_inst.run()
-        test1_posterior_m = test1_DLM_inst.m_posterior_mean
-        test1_one_step_forecast_f = test1_DLM_inst.f_one_step_forecast_mean
-        test1_one_step_forecast_var = test1_DLM_inst.Q_one_step_forecast_var
-        # print(test1_filtered_theta_on_time)
+
+        test1_m, test1_C = test1_DLM_inst.get_posterior_m_C()
+        test1_f, test1_Q = test1_DLM_inst.get_one_step_forecast_f_Q()
+        
         plt.plot(range(100), test1_theta_seq) #blue: true theta
-        plt.plot(range(100), test1_posterior_m) #orange: posterior E(theta_t|D_t)
-        plt.plot(range(100), test1_one_step_forecast_f) #green: one-step forecast E(Y_t|D_{t-1})
+        plt.plot(range(100), test1_m) #orange: posterior E(theta_t|D_t)
+        print(test1_f)
+        plt.plot(range(100), test1_f) #green: one-step forecast E(Y_t|D_{t-1})
         plt.scatter(range(100), test1_y_seq, s=10) #blue dot: obs
         z95 = 1.644854
-        cred_interval_upper = [x[0] + z95*np.sqrt(v[0][0]) for x, v in zip(test1_one_step_forecast_f, test1_one_step_forecast_var)]
-        cred_interval_lower = [x[0] - z95*np.sqrt(v[0][0]) for x, v in zip(test1_one_step_forecast_f, test1_one_step_forecast_var)]
+        cred_interval_upper = [x[0] + z95*np.sqrt(v[0][0]) for x, v in zip(test1_m, test1_C)]
+        cred_interval_lower = [x[0] - z95*np.sqrt(v[0][0]) for x, v in zip(test1_m, test1_C)]
+        plt.plot(range(100), cred_interval_upper, color="grey") #posterior (\theta_t|D_{t}) 90% credible interval
+        plt.plot(range(100), cred_interval_lower, color="grey") #posterior (\theta_t|D_{t}) 90% credible interval
+        cred_interval_upper = [x[0] + z95*np.sqrt(v[0][0]) for x, v in zip(test1_f, test1_Q)]
+        cred_interval_lower = [x[0] - z95*np.sqrt(v[0][0]) for x, v in zip(test1_f, test1_Q)]
         plt.plot(range(100), cred_interval_upper, color="grey") #one-step forecast (Y_t|D_{t-1}) 90% credible interval
         plt.plot(range(100), cred_interval_lower, color="grey") #one-step forecast (Y_t|D_{t-1}) 90% credible interval
         plt.show()
