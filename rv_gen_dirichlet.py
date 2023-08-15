@@ -1,7 +1,7 @@
 from random import gammavariate, seed
 
 class Sampler_Dirichlet:
-    def __init__(self, set_seed=20220406):
+    def __init__(self, set_seed):
         seed(set_seed)
 
     def _parameter_support_checker(self, alpha_param):
@@ -25,7 +25,7 @@ class Sampler_Dirichlet:
         return samples
 
 if __name__ == "__main__":
-    dir_sampler_inst = Sampler_Dirichlet()
+    dir_sampler_inst = Sampler_Dirichlet(20220406)
     print(dir_sampler_inst.sampler_iter(5, [1,2,3,4,5]))
     print(dir_sampler_inst.sampler_iter(5, [1,1,1,1,1]))
     

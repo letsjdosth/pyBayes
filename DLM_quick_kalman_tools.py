@@ -1,9 +1,9 @@
 import numpy as np
 
-from DLM_Core import DLM_D0_container, DLM_simulator, DLM_utility
+from DLM_Core import DLM_model_container, DLM_simulator, DLM_utility
 
 class Kalman_filter_smoother:
-    def __init__(self, y_observation, D0: DLM_D0_container, initial_mu0_given_D0, initial_P0_given_D0):
+    def __init__(self, y_observation, D0: DLM_model_container, initial_mu0_given_D0, initial_P0_given_D0):
         self.util_inst = DLM_utility()
 
         #input
@@ -117,7 +117,7 @@ if __name__=="__main__":
         test1_V = [np.array([[0.1]]) for _ in range(100)]
         test1_F = [np.array([[1]]) for _ in range(100)]
         test1_G = [np.array([[0.9]]) for _ in range(100)]
-        test1_D0 = DLM_D0_container(100)
+        test1_D0 = DLM_model_container(100)
         test1_D0.set_Ft_design_mat(test1_F)
         test1_D0.set_Gt_transition_mat(test1_G)
         test1_D0.set_Vt_obs_eq_covariance(test1_V)
@@ -156,7 +156,7 @@ if __name__=="__main__":
         test2_V = [np.array([[0.1, 0],[0, 0.1]]) for _ in range(100)]
         test2_F = [np.array([[1,0],[0,1]]) for _ in range(100)]
         test2_G = [np.array([[0.9, 0], [0, 0.5]]) for _ in range(100)]
-        test2_D0 = DLM_D0_container(100)
+        test2_D0 = DLM_model_container(100)
         test2_D0.set_Ft_design_mat(test2_F)
         test2_D0.set_Gt_transition_mat(test2_G)
         test2_D0.set_Vt_obs_eq_covariance(test2_V)
